@@ -1,0 +1,31 @@
+version: '3.8'
+
+volumes:
+  redis_db_vol:
+  
+networks:
+  default:
+    name: network_redis_db
+
+services:
+
+  redis_db:
+    container_name: redis_db
+    image: redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_db_vol:/data
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis_db:6379
+    ports:
+      - 8081:8081
